@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GemHub</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text x=%2250%%22 y=%2250%%22 style=%22dominant-baseline:central;text-anchor:middle;font-size:90px;%22>🚀</text></svg>">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -90,8 +91,8 @@ body.edit-mode .edit-banner{display:block}
 .cat-del-btn:hover{background:var(--danger-bg);color:var(--danger)}
 .chevron{font-size:9px;color:var(--text3);transition:transform .25s cubic-bezier(.4,0,.2,1);flex-shrink:0}
 .section-toggle.open .chevron{transform:rotate(180deg)}
-.section-body{max-height:0;overflow:hidden;transition:max-height .38s cubic-bezier(.4,0,.2,1);background:var(--bg-white);border:1px solid rgba(26,115,232,.28);border-top:none;border-radius:0 0 var(--radius) var(--radius)}
-.section-body.open{max-height:5000px}
+.section-body{height:0;overflow:hidden;transition:height .35s cubic-bezier(.4,0,.2,1),opacity .3s ease;opacity:0;background:var(--bg-white);border:1px solid rgba(26,115,232,.28);border-top:none;border-radius:0 0 var(--radius) var(--radius)}
+.section-body.open{opacity:1}
 .section-body.sop-body{border-color:rgba(217,119,6,.25)}
 .section-body-inner{padding:7px 9px 11px}
 .card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:5px}
@@ -225,16 +226,21 @@ body.edit-mode .cat-sort-btn{display:flex;align-items:center}
 .dm-cat-icon{font-size:16px;flex-shrink:0}
 .dm-cat-name{font-size:13px;font-weight:600;color:var(--text);flex:1}
 .dm-cat-count{font-family:var(--font-mono);font-size:10px;color:var(--text3);background:rgba(0,0,0,.06);border-radius:8px;padding:1px 6px;flex-shrink:0}
-.dm-chevron{font-size:9px;color:var(--text3);transition:transform .22s;flex-shrink:0}
+.dm-chevron{font-size:9px;color:var(--text3);transition:transform .25s cubic-bezier(.4,0,.2,1);flex-shrink:0}
 .dm-cat.open .dm-chevron{transform:rotate(180deg)}
 .dm-cat.open .dm-cat-count{background:rgba(233,30,99,.1);color:#c2185b}
-.dm-body{display:none;padding:8px 12px 14px 14px}
-.dm-cat.open .dm-body{display:block}
+.dm-body{height:0;overflow:hidden;transition:height .35s cubic-bezier(.4,0,.2,1),opacity .3s ease}
+.dm-cat:not(.open) .dm-body{opacity:0}
+.dm-cat.open .dm-body{opacity:1}
+.dm-body-inner{padding:8px 12px 14px 14px}
 .dm-grid{display:flex;flex-wrap:wrap;gap:6px}
-.dm-mag-btn{display:inline-flex;align-items:center;gap:5px;padding:5px 11px;border-radius:16px;border:1.5px solid var(--border-mid);background:var(--bg);color:var(--text2);font-family:var(--font);font-size:11.5px;font-weight:500;cursor:pointer;transition:all .14s;text-decoration:none;white-space:nowrap}
+.dm-grid-col{display:flex;flex-direction:column;gap:4px}
+.dm-grid-col .dm-mag-btn{border-radius:8px;width:100%;box-sizing:border-box}
+.dm-site-note{font-size:10px;color:var(--text3);font-style:italic;margin-left:3px}
+.dm-mag-btn{display:inline-flex;align-items:flex-start;gap:5px;padding:5px 11px;border-radius:16px;border:1.5px solid var(--border-mid);background:var(--bg);color:var(--text2);font-family:var(--font);font-size:11.5px;font-weight:500;cursor:pointer;transition:all .14s;text-decoration:none;white-space:normal;max-width:100%;line-height:1.4}
 .dm-mag-btn:hover{border-color:#e91e63;background:rgba(233,30,99,.07);color:#c2185b}
 .dm-mag-btn.linked{border-color:rgba(233,30,99,.35);background:rgba(233,30,99,.05);color:#ad1457}
-.dm-mag-dot{width:5px;height:5px;border-radius:50%;background:var(--border-mid);flex-shrink:0}
+.dm-mag-dot{width:5px;height:5px;border-radius:50%;background:var(--border-mid);flex-shrink:0;margin-top:5px}
 .dm-mag-btn.linked .dm-mag-dot{background:#e91e63}
 .advisor-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.28);z-index:200}
 .advisor-overlay.show{display:block}
@@ -415,133 +421,11 @@ const SAVED_DATA = [{"id":100,"sop":true,"sopTag":"W00","icon":"▶","name":"【
 /*DATA_END*/
 
 /*DMAG_START*/
-const SAVED_DMAG = [
-  {"id":"dm1","icon":"💄","name":"美容・コスメ","mags":[
-    {"name":"美的","url":"https://www.biteki.com/"},
-    {"name":"VOCE","url":"https://voce.hpplus.jp/"},
-    {"name":"MAQUIA","url":"https://maquia.hpplus.jp/"},
-    {"name":"ar","url":"https://ar-web.tv/"},
-    {"name":"More","url":"https://more.hpplus.jp/"},
-    {"name":"non-no","url":"https://nonno.hpplus.jp/"},
-    {"name":"CanCam","url":"https://cancam.jp/"},
-    {"name":"Oggi","url":"https://oggi.jp/"},
-    {"name":"with","url":"https://withonline.jp/"},
-    {"name":"SPRiNG","url":"https://spring-s.com/"},
-    {"name":"Sweet","url":"https://sweet-web.com/"},
-    {"name":"Ray","url":"https://ray.hpplus.jp/"},
-    {"name":"美ST","url":"https://byst.hpplus.jp/"}
-  ]},
-  {"id":"dm2","icon":"🏡","name":"暮らし・インテリア","mags":[
-    {"name":"ESSE","url":"https://esse-online.jp/"},
-    {"name":"レタスクラブ","url":"https://www.lettuceclub.net/"},
-    {"name":"オレンジページ","url":"https://www.orangepage.net/"},
-    {"name":"主婦の友","url":"https://shufu.hpplus.jp/"},
-    {"name":"CHANTO","url":"https://chanto.jp.net/"},
-    {"name":"TURNS","url":"https://turns.jp/"},
-    {"name":"Mart","url":"https://mart-magazine.com/"},
-    {"name":"天然生活","url":"https://tennenseikatsu.jp/"}
-  ]},
-  {"id":"dm3","icon":"🌿","name":"ライフスタイル","mags":[
-    {"name":"CLASSY.","url":"https://classy-online.jp/"},
-    {"name":"Domani","url":"https://domani.shogakukan.co.jp/"},
-    {"name":"Precious","url":"https://precious.jp/"},
-    {"name":"STORY","url":"https://storyweb.jp/"},
-    {"name":"eclat","url":"https://eclat.hpplus.jp/"},
-    {"name":"LEE","url":"https://lee.hpplus.jp/"},
-    {"name":"婦人公論","url":"https://fujinkoron.jp/"},
-    {"name":"ミセス","url":"https://mrs-magazine.com/"}
-  ]},
-  {"id":"dm4","icon":"💼","name":"ビジネス・マネー","mags":[
-    {"name":"日経ビジネス","url":"https://business.nikkei.com/"},
-    {"name":"週刊ダイヤモンド","url":"https://diamond.jp/"},
-    {"name":"東洋経済","url":"https://toyokeizai.net/"},
-    {"name":"プレジデント","url":"https://president.jp/"},
-    {"name":"日経WOMAN","url":"https://woman.nikkei.com/"},
-    {"name":"日経トレンディ","url":"https://trendy.nikkeibp.co.jp/"},
-    {"name":"PRESIDENT WOMAN","url":"https://woman.president.jp/"},
-    {"name":"Forbes Japan","url":"https://forbesjapan.com/"}
-  ]},
-  {"id":"dm5","icon":"💻","name":"IT・テクノロジー","mags":[
-    {"name":"日経PC21","url":"https://pc.nikkeibp.co.jp/"},
-    {"name":"日経Linux","url":"https://xtech.nikkei.com/linux/"},
-    {"name":"WIRED","url":"https://wired.jp/"},
-    {"name":"Web+DB PRESS","url":"https://gihyo.jp/magazine/wdpress"},
-    {"name":"Software Design","url":"https://gihyo.jp/magazine/SD"},
-    {"name":"ASCII","url":"https://ascii.jp/"}
-  ]},
-  {"id":"dm6","icon":"👨‍👩‍👧","name":"ファミリー・子育て","mags":[
-    {"name":"たまひよ","url":"https://st.benesse.ne.jp/ninshin/"},
-    {"name":"AERA with Kids","url":"https://dot.asahi.com/aera/withkids/"},
-    {"name":"kodomoe","url":"https://kodomoe.net/"},
-    {"name":"ひよこクラブ","url":"https://st.benesse.ne.jp/ikuji/"}
-  ]}
-];
+const SAVED_DMAG = [{"id":"dm1","icon":"💄","name":"ヘア・美容","mags":[{"name":"LDK the Beauty","url":"https://dmagazine.docomo.ne.jp/media/b54f74aee2883e390aa8074de84602c6793c293adaf77bf43fe7554f0083c3a2/"},{"name":"LDK the Beauty \"MAN\"","url":"https://dmagazine.docomo.ne.jp/item/8883ec7087665f9ea48b25178c00e3200d9ff0bac837a67c4b434827cd334389/1000/"},{"name":"LDK Ageless","url":"https://dmagazine.docomo.ne.jp/item/ced1c4bba3f439c42959e25c3cb233a02844d2ac5ad47f561c050881ed831c16/1000/"},{"name":"TEST the BEST Beauty","url":"https://dmagazine.docomo.ne.jp/item/5704dad831c0a2e5acc977d8926e1abef72e68562ef8d14fa8cd891c99068d73/1000/"},{"name":"MAQUIA","url":"https://dmagazine.docomo.ne.jp/media/9690ad7af9df847148312901a358d183c66a4dc34c608aad229d2d154d46f964/"},{"name":"VOCE","url":"https://dmagazine.docomo.ne.jp/media/4c8c51905b4e58c63225bbd614f5654f3220a4f8af1ffd11d766340de1c1cc91/"},{"name":"美ST (ビスト)","url":"https://dmagazine.docomo.ne.jp/media/51855ce0af895dedb0e6799986c4d93012dc29dce6786eee37e630cdabf71579/"},{"name":"美的","url":"https://dmagazine.docomo.ne.jp/media/596c2500d36d2b88c282a54ade36f9e220108628f3812465c0a56cb154e96211/"},{"name":"美的GRAND","url":"https://dmagazine.docomo.ne.jp/media/67af4851667c6d9882d0e4e2039f3b7e73d0245c8e2fbc63f94fd5f8226a3494/"},{"name":"ヨガジャーナル日本版","url":"https://dmagazine.docomo.ne.jp/media/ce9835654ce0775ebb473231562cf0475a3900b80fad895d33daecc6bf34207d/"},{"name":"FINEBOYS+plus FACE","url":"https://dmagazine.docomo.ne.jp/item/0e0272f33ba1095f49247ad76a9bc1d4d21a2cf2fd08e2097687a04850116b3f/1000/"},{"name":"FINEBOYS+plus BEAUTY","url":"https://dmagazine.docomo.ne.jp/item/5d012244fda44f1b96040ea4f11fc39d2675b9a716d63c2b18c1b4058d82b749/1000/"},{"name":"Woman's SHAPE & Sports","url":"https://dmagazine.docomo.ne.jp/item/16ae9b82814807a9d345d631f7d0874111be7e05377409ed59c8da4e683c7e37/1000/"},{"name":"リアルオーダーヘアブック","url":"https://dmagazine.docomo.ne.jp/item/bc358a3e4a7234ea1ec64791cfa99e6696fd5ffea16a3831d505f308d454e849/1000/"},{"name":"LDK老けない美容最強バイブル最新版","url":"https://dmagazine.docomo.ne.jp/item/26eaec08425044292d4d1e927f08b897e10a49468a1f124d5fc3562f6b7a2d02/1000/"},{"name":"LDK老けない美肌の便利帖","url":"https://dmagazine.docomo.ne.jp/item/331d1b1a122492d5003561b8b69a8eb6fe6b0cd6eaae1a36d5150b48def4633a/1000/"},{"name":"MONOQLO 老けない男の作り方 完全ガイド","url":"https://dmagazine.docomo.ne.jp/item/4672a219bee85055d14d5f3bf634b5a6fc47c1a60addea8fe4f56aced18a5023/1000/"}]},{"id":"dm2","icon":"🏠","name":"暮らし・健康・料理","mags":[{"name":"LDK","url":"https://dmagazine.docomo.ne.jp/media/7f6fcb33ca4ca882edca34f185270bc2776651f53a784535be280e7a5042085d/"},{"name":"3分クッキング","url":"https://dmagazine.docomo.ne.jp/media/04349e5c9d9acb987ccf9e698cfe9a1e4a3f1daf11669dba5d17c64e1f3ec921/"},{"name":"ESSE","url":"https://dmagazine.docomo.ne.jp/media/d11739e39f24f424d8df9a530211632f11c269011729cd728f4a279239582228/"},{"name":"NHK きょうの健康","url":"https://dmagazine.docomo.ne.jp/media/d9449191e6a184d5a1d900262db6b6a102c1a18868591069e07c0e14799c32b2/"},{"name":"NHK きょうの料理","url":"https://dmagazine.docomo.ne.jp/media/0e303c3f6069398c3fe666bf61afc0d7d074909882fdbe281c86923dab035b0c/"},{"name":"NHK きょうの料理ビギナーズ","url":"https://dmagazine.docomo.ne.jp/media/3fc2a2ac4408122a2f24900dadf70992b43f15a93f440c489bc524d9bec0cc70/"},{"name":"オレンジページ","url":"https://dmagazine.docomo.ne.jp/media/8602073c2e00ed4c5eea12abd61a616808f6c47f00a20b9c9e1ff2cbda521463/"},{"name":"オレンジページplus","url":"https://dmagazine.docomo.ne.jp/media/594cad98a50236861406aaa1f1666b0826d3d2dea202b283ed4adf4a180d0493/"},{"name":"からだにいいこと","url":"https://dmagazine.docomo.ne.jp/item/5fed6a88160af774aed991110e8cec1c34c3136ae94cbb826ff17efe9ebbefc9/1000/"},{"name":"クロワッサン","url":"https://dmagazine.docomo.ne.jp/media/2e8a2ab9d6238ff33975ea5cb93421d245c40bd68d1296de25e35f25a2e9c815/"},{"name":"サンキュ！","url":"https://dmagazine.docomo.ne.jp/media/39ff0dafce3f8145cc30e5b2a13f7326e9a3e128ad102305336589b54f57da47/"},{"name":"ハルメク","url":"https://dmagazine.docomo.ne.jp/media/50885db63371e2e0f0ad187b1610123c4a88aa8f2f90ff9437fb2377e3cc9e94/"},{"name":"ゆうゆう","url":"https://dmagazine.docomo.ne.jp/media/1b1a68ab3f54eb06d94931e79135333c76dd85157111e101fa7c53800c6fda76/"},{"name":"レタスクラブ","url":"https://dmagazine.docomo.ne.jp/media/bf977d3ae975ca230e75752d0625cbe19098850209102f010d7c8a0ee9441d07/"},{"name":"安心","url":"https://dmagazine.docomo.ne.jp/media/794677728e3ebaf14ad80a34a17b63d8b4cc86f6c593a58ed2a16612198ce8ca/"},{"name":"栄養と料理","url":"https://dmagazine.docomo.ne.jp/media/b1e99008be0182ba62e0a7958de17cb55f58b0a87a9c58f5df6d23a7a2068864/"},{"name":"壮快","url":"https://dmagazine.docomo.ne.jp/media/d6c27b59593ab3f53774935684ee0e2fcc988a93801a5ee98a43850cc0efa07f/"},{"name":"毎日が発見","url":"https://dmagazine.docomo.ne.jp/media/859e447ede54bf208f01652d3e402d275bdd78020f8e131e2435177d83ae95f6/"},{"name":"健康","url":"https://dmagazine.docomo.ne.jp/media/f4ac7101890de8ce2ae5df6794f4575b4d1b60e3205d2ba364cedc7882a4073e/"},{"name":"フーディストノートmagazine","url":"https://dmagazine.docomo.ne.jp/item/dca18513e7b72584cce4986abeba606947628d2768181c1eb98a14e2134ac05e/1000/"},{"name":"自律神経を整えるお得技ベストセレクション","url":"https://dmagazine.docomo.ne.jp/item/623b224db770b87c00b4b96fc8809843ceb34c341ebc5bffe524df72f50950c6/1000/"},{"name":"LDK 冷凍保存の便利帖","url":"https://dmagazine.docomo.ne.jp/item/501ce3ed09a9bc05953dbfaa2be5540a75d095ce83570cc4967e2548431910d5/1000/"},{"name":"名医が教える 血圧を下げる最高の方法","url":"https://dmagazine.docomo.ne.jp/item/d40f9f6ed42c54fed323d407f4252f1515d28984feb45e943c39f259575cf97e/1000/"},{"name":"名医が教える 脊柱管狭窄症がよくなるこれだけ1分体操","url":"https://dmagazine.docomo.ne.jp/item/d7072649e5a8fee624af41f6e9460f4df161b98fec8542248d7db57f98ba4fd2/1000/"},{"name":"血糖値を下げるお得技ベストセレクション","url":"https://dmagazine.docomo.ne.jp/item/7fb78d7789e1ad1ce37d5e59180d182d7e516f9f6827884f7550975c99130875/1000/"},{"name":"血糖値を下げる大百科","url":"https://dmagazine.docomo.ne.jp/item/f566ac5fbef726697f8bb2a0dc4528365a4ce12f9a9b5fa26e4b67483f6eaa80/1000/"},{"name":"LDK 100均 the Best","url":"https://dmagazine.docomo.ne.jp/item/f17e839a43862359f8c4786b79938777856ee3c2881bd5913a889ca187272af5/1000/"},{"name":"LDK 3COINS the BEST","url":"https://dmagazine.docomo.ne.jp/item/862db8795f715f5d03f6789502065ca0cc94196bf0e71cbeaddb7e2d0a475134/1000/"},{"name":"LDK 無印良品 the Best","url":"https://dmagazine.docomo.ne.jp/item/14ea67c22a1cbde8028846fa3bad62876d9a55e4881397b85639eb5dd76450bc/1000/"},{"name":"MONOQLO スゴい日用品 the BEST","url":"https://dmagazine.docomo.ne.jp/item/6e0a69a0c4ab33e5c71b03cd9dc3d7b07dc46af721b3e1047094ffb051152f51/1000/"},{"name":"カルディ the Best","url":"https://dmagazine.docomo.ne.jp/item/56bdad7f562af4a37c83b6f1a9467241c95452df6f4b4a8ed3a43ce7ba91bd52/1000/"},{"name":"コストコ the Best","url":"https://dmagazine.docomo.ne.jp/item/96a827b5ed0b4a7831dca55c40277e73e7d1de11e7702de4723297400e024c5c/1000/"},{"name":"LDK 業務スーパー the Best 2026","url":"https://dmagazine.docomo.ne.jp/item/a92afdf7b6981bc08d5e97b4b6758a6a83e170b776dbf535cf3c5e3ae906c81b/1000/"},{"name":"食べる漢方の便利帖","url":"https://dmagazine.docomo.ne.jp/item/8b82252d1fdf769f665d7071c7bb51c2239d5ff97635de853eb3651bd885b795/1000/"},{"name":"食べる漢方レシピの便利帖","url":"https://dmagazine.docomo.ne.jp/item/3e29961a837bd6198fe4bf4fb481b0690f6ee7d33cd877dbc43979e98db12555/1000/"},{"name":"LDK おそうじの超ベストアイディア","url":"https://dmagazine.docomo.ne.jp/item/dec18607533b2059a73963cb6fd87a1fecb0903e20c9a937b9a63f17edd37cd9/1000/"},{"name":"ひざ痛を治すお得技ベストセレクション","url":"https://dmagazine.docomo.ne.jp/item/4a471346c93ca7f94e11fe89e61745be871f51e7ffb459e3ab484228dbf1dde5/1000/"}]},{"id":"dm3","icon":"🌿","name":"ライフスタイル","mags":[{"name":"Tarzan (ターザン)","url":"https://dmagazine.docomo.ne.jp/media/4e985793bfa2bb3bec10f9c13ef346c630f61d691fc678572c73217bc0a53864/"},{"name":"日経ウーマン","url":"https://dmagazine.docomo.ne.jp/media/dfc82916fc8d98ed8632be3ee5bc092f0e21d1a83ab4f5a69bd63651f4094c62/"},{"name":"週刊MONODAS","url":"https://dmagazine.docomo.ne.jp/media/4a428b5a945a7f6967a75b7b92ef15a7a2c9ada44f15f21b425e6af295f929f3/"},{"name":"MonoMaster","url":"https://dmagazine.docomo.ne.jp/media/cc6780d7615aaeb6001f9a27c3b4d01268624ec0e0d62d865188539167a0c49e/"},{"name":"新NISA完全ガイド","url":"https://dmagazine.docomo.ne.jp/item/80dc5a653bf29205572a7eb74f198bf0a83cab054f1ccc4a41196dfe0bdbc489/1000/"},{"name":"NISA完全ガイド2025","url":"https://dmagazine.docomo.ne.jp/item/3e43e9a78a27bf10a73fa7f74313383f7f8aa73c66155ec2996b48febf4a4644/1000/"},{"name":"新NISAビギナーズガイド2024-25","url":"https://dmagazine.docomo.ne.jp/item/a58248c6f537bdd585df113400f4193a213da1131982fd7a19a45f73d1251c52/1000/"},{"name":"株主優待完全ガイド","url":"https://dmagazine.docomo.ne.jp/item/ee50aa1442b7f8d3c2eaa4523c4632595b373216e9c2163165c089526b516780/1000/"},{"name":"安くて良い株主優待ベストセレクション","url":"https://dmagazine.docomo.ne.jp/item/baddf56e882d1f534386f0a25ed6a4fb094d12860c988234b8244b061584069b/1000/"},{"name":"定年前後のお金と暮らしお得技ベストセレクション 2023最新版","url":"https://dmagazine.docomo.ne.jp/item/03834c19837eb49e78496f79969ca6758221d78be039cd94d5c93e09e1a63020/1000/"},{"name":"東京ディズニーランド＆シーお得技ベストセレクション","url":"https://dmagazine.docomo.ne.jp/item/e98cecf7e38fb6c47b62303ed36fcf5544d40e272e99c55c31b86eb3f1c99a1a/1000/"},{"name":"ユニバーサル・スタジオ・ジャパンお得技ベストセレクション","url":"https://dmagazine.docomo.ne.jp/item/36c0e8c72a5c44e73f96d5284c9ef258e25ab7765798fe8a437c6cd1c04bec23/1000/"},{"name":"日本一わかりやすい 一戸建ての選び方がわかる本 2025-26","url":"https://dmagazine.docomo.ne.jp/item/0a68a305efe8e7f05c52076f47844b55a5893c2e3decd02ab8e15daf18e19e00/1000/"},{"name":"はじめての家の買い方がまるごとわかる本","url":"https://dmagazine.docomo.ne.jp/item/d07f8441e716fec9fd66375711c9c03510f209cbb73880fc78cef97a7a1433a3/1000/"},{"name":"マイホーム大全 2026-27","url":"https://dmagazine.docomo.ne.jp/item/c32b689c9bd84ee3d52926c28e5099b65f0260b822ec988fbce614a739a183e5/1000/"},{"name":"MONOQLO 大人の趣味 the BEST 2026","url":"https://dmagazine.docomo.ne.jp/item/5a851718dd37d563ff08ae635301fccb3342611502f6c33f43a920f7d31ec792/1000/"},{"name":"ゴルフ for Beginners 2026-27","url":"https://dmagazine.docomo.ne.jp/item/74cdae44735f9c753f18a80156405f2ec099baa8dd3994ca714f83f44c88947d/1000/"}]},{"id":"dm4","icon":"💹","name":"ビジネス・経済","mags":[{"name":"ダイヤモンドZAi (ザイ)","url":"https://dmagazine.docomo.ne.jp/media/32fb84fc7a58ee2b93c8570f4e3aa1062100bcc8ac10cd2927ae24bbfd234ad9/"},{"name":"日経トレンディ","url":"https://dmagazine.docomo.ne.jp/media/42883883ecb9d1eae1ff10107d832b743b1c7b030baf61eb8cb586ff9ef8c6ec/"},{"name":"日経マネー","url":"https://dmagazine.docomo.ne.jp/media/cf1f45f14b898a1a0e67047b3f92c5bb1c2728d7db16a85d6c9fc2fb28a2c0ec/"},{"name":"LDK お金のきほん the Best","url":"https://dmagazine.docomo.ne.jp/item/06968dda3f81512b6be57bbff5f1261faa9e6da28b643bda174c64bbf42faea3/1000/"},{"name":"投資信託完全ガイド","url":"https://dmagazine.docomo.ne.jp/item/f59dc1b1e1f3d56a0a9e8347e6f475134881cf3d69413444a04a14202cd2d652/1000/"},{"name":"米国株完全ガイド","url":"https://dmagazine.docomo.ne.jp/item/0962d5f33306f60cd93937d08a415cae3a906532e28b12c8e10aeca262c048c7/1000/"}]},{"id":"dm5","icon":"💻","name":"IT・ガジェット","mags":[{"name":"DIME","url":"https://dmagazine.docomo.ne.jp/media/a586008ca21f1dd452b6b15bae31f31463a772cff765cfba1ba6d6b4d8651364/"},{"name":"GetNavi","url":"https://dmagazine.docomo.ne.jp/media/691507ef42f7eb796bb64c52279ba35da3c340ef344c666368992cb8ea18daac/"},{"name":"GoodsPress","url":"https://dmagazine.docomo.ne.jp/media/98de9d2cdfb7f84814babfb7841adc03ea246a1e7ad13c5ed63938d9f47127f1/"},{"name":"Mac Fan","url":"https://dmagazine.docomo.ne.jp/media/5f8372b89425461feb568e6614d1fe09dd7456cd8116fec60f2c8f9f15d9c279/"},{"name":"MONOQLO","url":"https://dmagazine.docomo.ne.jp/media/089c4c30ee8300d0889041d5aeaaa5e7e556bdb49d4b3a577aa86c60d382bac8/"},{"name":"Mr.PC","url":"https://dmagazine.docomo.ne.jp/media/631e61bef53ecceeaa8fd796ea9d3e2cfaa5c529d13cba6002bd12bdf88e7de5/"},{"name":"家電批評","url":"https://dmagazine.docomo.ne.jp/media/1ea1314e0f9ca5920f98103f58cfef2825259a09635aefe4caaffcb01b001ccc/"},{"name":"週刊アスキー","url":"https://dmagazine.docomo.ne.jp/media/8f1720c0d1b4ee95f68ba92c1f0b101be76aa1e4818f632362c13f7269e3422e/"},{"name":"日経PC21","url":"https://dmagazine.docomo.ne.jp/media/569fa4152012e61b3609d53f74babb07e530069d41289c040f3647141885f85c/"},{"name":"モノ・マガジン","url":"https://dmagazine.docomo.ne.jp/media/3befad4a3bf6ebcaf09b49dc587e16cbc653b861f68bdf296c721d59ad73edb4/"},{"name":"週刊GoodsPress DIGITAL","url":"https://dmagazine.docomo.ne.jp/media/78511999e035a9f4081ff16cc83f5500713eb60342c118a8656dfe3286f85496/"},{"name":"アマゾン大全","url":"https://dmagazine.docomo.ne.jp/item/85ac77f9ae1b93de230b900c11a563003d128f9ebef52cbd40deec0afa995400/1000/"},{"name":"家電批評 ランキング the Best","url":"https://dmagazine.docomo.ne.jp/item/15e2029c40137fdb253f74615b97e79dbe02c06e9654e0107dd8b12172c52f1c/1000/"},{"name":"Wi-Fiがまるごとわかる本 2026","url":"https://dmagazine.docomo.ne.jp/item/fb9dc31f23c63dcdbf862aba0ff6d6246853ff7738c2c8665015691137c1788f/1000/"},{"name":"家電批評 安くて良い家電 the BEST 2026","url":"https://dmagazine.docomo.ne.jp/item/d63385b1c0cb1166b1c6fc64b03afb40b285c36eb35746d28a63a218993908ed/1000/"},{"name":"自作PC最強バイブル 2025","url":"https://dmagazine.docomo.ne.jp/item/9e5e8c57cee1a73d159fc209f4ec77bddd8e43de06a3d02e3e0644d84bb4e578/1000/"},{"name":"家電批評 iPad for ビギナーズ 2025","url":"https://dmagazine.docomo.ne.jp/item/51c7bdd0e125aadecbe2b7a53e4b5d77e59dfe7220d598132b2a7d8ca5f057ce/1000/"},{"name":"生成AI お得技ベストセレクション","url":"https://dmagazine.docomo.ne.jp/item/6e1f21721e9a4e480860affb6b86bfc0304be01d1a293a4e6a85b2b2b37f94d4/1000/"},{"name":"MONOQLO ビジネスグッズ大全2026","url":"https://dmagazine.docomo.ne.jp/item/2824e47f37fbcbc8fea6b96eaca773990fc9970b07583ebbad09c855e80df33a/1000/"},{"name":"ミラーレス一眼カメラがまるごとわかる本 2025-2026","url":"https://dmagazine.docomo.ne.jp/item/45ffeffb777d1319459c61cfcb07fbde04300e11cf0cf2393d08395f2eb186dd/1000/"}]},{"id":"dm6","icon":"👨‍👩‍👧","name":"ファミリー・キッズ・ペット","mags":[{"name":"いぬのきもち","url":"https://dmagazine.docomo.ne.jp/media/a0d3395dec904c7e4e9db33621695218fa7c9fdb401e9dd3beca49c2984d98a5/"},{"name":"ねこのきもち","url":"https://dmagazine.docomo.ne.jp/media/5c475425ad3b14f27214ae940eecd2ec6cb9ba6c82a0fdd7648556a8ce6126df/"},{"name":"初めてのたまごクラブ","url":"https://dmagazine.docomo.ne.jp/media/0ed4f5b3c5a36abc6faffa111dd5a1599a5abdf9d9b8e01e991b7b565438fe8c/"},{"name":"中期のたまごクラブ","url":"https://dmagazine.docomo.ne.jp/media/d605f9288fbb84cdd064e4a4a6473623daad52cf9ec43568db1d7c40956173a5/"},{"name":"後期のたまごクラブ","url":"https://dmagazine.docomo.ne.jp/media/e247c3498b390a9a118ec590c3f482f703f5e87803c486c8c5890232a8239744/"},{"name":"初めてのひよこクラブ","url":"https://dmagazine.docomo.ne.jp/media/07972ddcd0ecabfee9bb12eebe706e6f366e8e0bf5a31ae164f4770680af3de2/"},{"name":"中期のひよこクラブ","url":"https://dmagazine.docomo.ne.jp/media/adddeb5b1199c262ba3c8367d0ec2af8ff28f27f77b09059bbd8e688d3e6fb16/"},{"name":"後期のひよこクラブ","url":"https://dmagazine.docomo.ne.jp/media/68af4e1feec8668657c76b1616b2a737784064614410d1b11b4b086616c93515/"},{"name":"プレジデントファミリー","url":"https://dmagazine.docomo.ne.jp/media/cc8bb315475e9799692f9c1786c60fb58186d5a30bbdb02e1b01c2ec66e14ee7/"},{"name":"LDK ベビー the Best","url":"https://dmagazine.docomo.ne.jp/item/156d2957e36bd5119fa323a77408871050226ffe9db04a98c9f73fa3bb24e5e6/1000/"},{"name":"ネコDK デラックス","url":"https://dmagazine.docomo.ne.jp/item/1c84ef46a35c5660d8ec3da1e09a003a9dd9da2663ac362b9d83a445e3823f4e/1000/"},{"name":"赤ちゃんが欲しい","url":"https://dmagazine.docomo.ne.jp/item/5a9bce0e526f8aa3a66964a91547580e4dffd11779579b1a0d63a8616bb45625/1000/"},{"name":"LDK ベビー用品完全ガイド 2026","url":"https://dmagazine.docomo.ne.jp/item/5e09735a7bf3d6738fa8987499f42911118678b405f2e3f08d8e6bae6594d2b6/1000/"},{"name":"10才までに算数が強くなる！マインクラフトで脱出迷路","url":"https://dmagazine.docomo.ne.jp/item/01c3d98f877a6f51f40c2342593d1ac55f8d681012ba12b189be2f86501e4998/1000/"},{"name":"ポケットサイズ マインクラフト最新データブック 2026年版","url":"https://dmagazine.docomo.ne.jp/item/025d974d02e83c45ecb79bd1715d4c29a0403eb4c56a9f7c624c9d51c4b73b76/1000/"},{"name":"ポケットサイズ マインクラフト最新コマンドブック","url":"https://dmagazine.docomo.ne.jp/item/c6de0142a709ad6e7337a2a6cb59d1a9acca92e2caecda0719aef9055c04a76c/1000/"},{"name":"キッズ英語教材完全ガイド","url":"https://dmagazine.docomo.ne.jp/item/0ca9eab336813c9cf437972ccf1815c28bfaec2904ff4fa5c83f708923f0db03/1000/"},{"name":"はじめてのネコの飼い方 for Beginners","url":"https://dmagazine.docomo.ne.jp/item/f9a1782a7b98616e70253e2524cbaf142162600af622cf804cb23f0bf4e7dcfe/1000/"},{"name":"ネコDK スペシャル・ベスト","url":"https://dmagazine.docomo.ne.jp/item/8bee15ebcce4d34a39dd61f9696b982eecd33a5df30c5481d8112124ee593a6e/1000/"},{"name":"わんこお得技ベストセレクション 2026","url":"https://dmagazine.docomo.ne.jp/item/120f4afd4136eeb442c562bfb1580dac22cc25cb821ca8d11c1bbcc51a60dd87/1000/"},{"name":"わんこの気持ちがもっとよくわかるお得技ベストセレクション","url":"https://dmagazine.docomo.ne.jp/item/0a53135ea24d774b55ded4d71fb5591c82b292d9d660b591764dad4a51befb14/1000/"}]}];
 /*DMAG_END*/
 
 /*SOURCES_START*/
-const SAVED_SOURCES = [
-  {"id":"src1","icon":"💬","name":"UGC・口コミ収集","items":[
-    {"name":"Yahoo!知恵袋","url":"https://chiebukuro.yahoo.co.jp/"},
-    {"name":"教えて!goo","url":"https://oshiete.goo.ne.jp/"},
-    {"name":"みんなの質問（価格.com）","url":"https://review.kakaku.com/"},
-    {"name":"発言小町（読売新聞）","url":"https://komachi.yomiuri.co.jp/"},
-    {"name":"ガールズちゃんねる","url":"https://girlschannel.net/"},
-    {"name":"爆サイ","url":"https://bakusai.com/"},
-    {"name":"ウィメンズパーク","url":"https://women.benesse.ne.jp/"},
-    {"name":"ベビカム","url":"https://babycome.ne.jp/"},
-    {"name":"ガルちゃん","url":"https://girlschannel.net/"},
-    {"name":"5ちゃんねる","url":"https://5ch.net/"}
-  ]},
-  {"id":"src2","icon":"📝","name":"レビュー・評価サイト","items":[
-    {"name":"Amazon（レビュー）","url":"https://www.amazon.co.jp/"},
-    {"name":"楽天市場（レビュー）","url":"https://review.rakuten.co.jp/"},
-    {"name":"@cosme","url":"https://www.cosme.net/"},
-    {"name":"LIPS","url":"https://lipscosme.com/"},
-    {"name":"Lulucos","url":"https://www.lulucos.jp/"},
-    {"name":"Google マップ口コミ","url":"https://maps.google.com/"},
-    {"name":"食べログ","url":"https://tabelog.com/"},
-    {"name":"じゃらん（口コミ）","url":"https://www.jalan.net/"}
-  ]},
-  {"id":"src3","icon":"📊","name":"トレンド・データ","items":[
-    {"name":"Google Trends","url":"https://trends.google.co.jp/"},
-    {"name":"Googleサジェスト","url":"https://www.google.co.jp/"},
-    {"name":"Ubersuggest","url":"https://neilpatel.com/ubersuggest/"},
-    {"name":"ラッコキーワード","url":"https://related-keywords.com/"},
-    {"name":"Yahoo!リアルタイム検索","url":"https://search.yahoo.co.jp/realtime"},
-    {"name":"Twitterトレンド","url":"https://twitter.com/explore/tabs/trending"},
-    {"name":"TikTokトレンド","url":"https://www.tiktok.com/trending"},
-    {"name":"LINE NEWS","url":"https://news.line.me/"}
-  ]},
-  {"id":"src4","icon":"📰","name":"ニュース・メディア","items":[
-    {"name":"NHKニュース","url":"https://www3.nhk.or.jp/news/"},
-    {"name":"朝日新聞デジタル","url":"https://www.asahi.com/"},
-    {"name":"日経電子版","url":"https://www.nikkei.com/"},
-    {"name":"東洋経済オンライン","url":"https://toyokeizai.net/"},
-    {"name":"ダイヤモンドオンライン","url":"https://diamond.jp/"},
-    {"name":"プレジデントオンライン","url":"https://president.jp/"},
-    {"name":"マイナビニュース","url":"https://news.mynavi.jp/"},
-    {"name":"ITmedia","url":"https://www.itmedia.co.jp/"}
-  ]},
-  {"id":"src5","icon":"🔍","name":"SNS・コミュニティ","items":[
-    {"name":"X（旧Twitter）検索","url":"https://x.com/search"},
-    {"name":"Instagram検索","url":"https://www.instagram.com/explore/"},
-    {"name":"TikTok検索","url":"https://www.tiktok.com/search"},
-    {"name":"YouTube検索","url":"https://www.youtube.com/results"},
-    {"name":"Threads","url":"https://www.threads.net/search"},
-    {"name":"Reddit（日本語）","url":"https://www.reddit.com/r/japan/"},
-    {"name":"note","url":"https://note.com/"},
-    {"name":"はてなブログ","url":"https://hatenablog.com/"}
-  ]},
-  {"id":"src6","icon":"📚","name":"学術・統計・白書","items":[
-    {"name":"国立国会図書館デジタル","url":"https://dl.ndl.go.jp/"},
-    {"name":"総務省統計局","url":"https://www.stat.go.jp/"},
-    {"name":"厚生労働省","url":"https://www.mhlw.go.jp/"},
-    {"name":"経済産業省","url":"https://www.meti.go.jp/"},
-    {"name":"Google Scholar","url":"https://scholar.google.co.jp/"},
-    {"name":"CiNii Research","url":"https://cir.nii.ac.jp/"},
-    {"name":"J-STAGE","url":"https://www.jstage.jst.go.jp/"}
-  ]}
-];
+const SAVED_SOURCES = [{"id":"s1","icon":"💄","name":"ヘア・美容","sites":[{"name":"360LiFE（ビューティー）","note":"『LDK the Beauty』公式。コスメの検証結果と「ベストバイ」がわかりアフィリエイトに直結。","url":"https://360life.shinyusha.co.jp/"},{"name":"mybest（コスメ・化粧品）","note":"肌悩み別のランキングと、デメリット込みの徹底レビューが強み。","url":"https://my-best.com/"},{"name":"@cosme Q&A","note":"商品購入前の迷いや深いコンプレックス（肌荒れ等）を直接抽出。","url":"https://www.cosme.net/chieco/"},{"name":"LIPS","note":"一般ユーザーのコメント欄から「これって荒れませんか？」等のリアルな懸念点を拾う。","url":"https://lipscosme.com/"},{"name":"ガールズちゃんねる（総合トップ）","note":"サイト内検索で「〇〇 買って後悔」「ステマ」等と検索し、忖度ゼロの辛口評価や本物のデメリットを抽出。","url":"https://girlschannel.net/"},{"name":"@cosmeランキング","url":"https://www.cosme.net/ranking/category/items","note":""},{"name":"@cosmeベストコスメアワード","url":"https://www.cosme.net/bestcosme/","note":""},{"name":"カテゴリ一覧｜美容・化粧品情報はアットコスメ","url":"https://www.cosme.net/category/","note":""},{"name":"@cosmeまとめ（アットコスメまとめ）","url":"https://www.cosme.net/biche/","note":""},{"name":"アットコスメ Q&A（@cosme Q&A） - 美容のお悩みならアットコスメのQ&A","url":"https://www.cosme.net/chieco/","note":""},{"name":"美容のプロフェッショナルや美容感度の高い方たちの情報発信｜アットコスメブログ","url":"https://www.cosme.net/beautist/","note":""},{"name":"ビューティニュース｜美容・化粧品情報はアットコスメ","url":"https://www.cosme.net/news/","note":""},{"name":"新作コスメカレンダー｜美容・化粧品情報はアットコスメ","url":"https://www.cosme.net/calendar/","note":""},{"name":"最新クチコミ｜美容・化粧品情報はアットコスメ","url":"https://www.cosme.net/latest-reviews/","note":""},{"name":"LIPS｜コスメ・美容・メイクの口コミアプリ｜リップス","url":"https://lipscosme.com","note":""},{"name":"コスメ総合ランキング【2026年最新】化粧品の人気おすすめクチコミ | LIPS","url":"https://lipscosme.com/rankings","note":""},{"name":"カテゴリ一覧 | LIPS","url":"https://lipscosme.com/categories","note":""},{"name":"ブランドTOP | LIPS","url":"https://lipscosme.com/brands","note":""},{"name":"【本日更新】メイクアップのおすすめ人気ランキング200選。プロが選び方や使い方のコツを解説【2026年】 | LIPS","url":"https://lipscosme.com/rankings/62","note":""},{"name":"LIPSライター一覧","url":"https://lipscosme.com/articles/authors","note":""},{"name":"コスメ・美容・メイクのタグ一覧 | LIPS","url":"https://lipscosme.com/tags","note":""},{"name":"テーマ一覧 | LIPS","url":"https://lipscosme.com/themes","note":""},{"name":"LIPSのコスメ一覧 | LIPS","url":"https://lipscosme.com/products","note":""},{"name":"LDK the Beauty（エルディーケー ザ ビューティ） 総合アクセスランキング | 360LiFE(サンロクマル)","url":"https://360life.shinyusha.co.jp/list/ldkb/ranking","note":""},{"name":"LDK the Beauty 公式 - 美容とコスメのおすすめベストバイ | 360LiFE(サンロクマル)","url":"https://360life.shinyusha.co.jp/list/ldkb","note":""},{"name":"LDK 公式 - 暮らしのおすすめベストバイ | 360LiFE(サンロクマル)","url":"https://360life.shinyusha.co.jp/list/ldk","note":""},{"name":"「MONOQLO グルメ大賞」記事一覧 | 360LiFE(サンロクマル)","url":"https://360life.shinyusha.co.jp/list/monoqlo-gourmet-award","note":""},{"name":"ガールズちゃんねるキーワード一覧","url":"https://girlschannel.net/topics/keyword/","note":""}]},{"id":"s2","icon":"🏠","name":"暮らし・健康・料理","sites":[{"name":"360LiFE（日用品・キッチン・収納）","note":"『LDK』公式。洗剤の落ちやすさや100均グッズの検証結果が揃う。","url":"https://360life.shinyusha.co.jp/"},{"name":"ROOMIE","note":"日常の小さな不便を解決するアイテム特化。Amazon/楽天リンクへ誘導しやすい。","url":"https://www.roomie.jp/"},{"name":"サンキュ！STYLE（読者ブロガー）","note":"一般主婦の等身大の悩みと解決策。食費や収納のリアルな挫折体験を抽出。","url":"https://39mag.benesse.ne.jp/style/"},{"name":"RoomClip（ルームクリップ）","note":"タグ検索で部屋のリアルな写真から「収納がない」「狭い」などの空間のPainを視覚的にリサーチ。","url":"https://roomclip.jp/"},{"name":"Yahoo!知恵袋（ダイエット・フィットネス）","note":"「毎日の献立が苦痛」「ご近所トラブル」など、日常のリアルなストレスを抽出。","url":"https://chiebukuro.yahoo.co.jp/category/2080159616/question/list"},{"name":"360LiFE 新着記事一覧 | 360LiFE(サンロクマル)","url":"https://360life.shinyusha.co.jp/list/new","note":""},{"name":"NEW ARTICLE | ROOMIE（ルーミー）","url":"https://www.roomie.jp/articles/","note":""},{"name":"新製品 5行レビュー | ROOMIE（ルーミー）","url":"https://www.roomie.jp/feature/short-review/","note":""},{"name":"マイ定番スタイル | ROOMIE（ルーミー）","url":"https://www.roomie.jp/feature/classic-style/","note":""},{"name":"みんなの部屋 | ROOMIE（ルーミー）","url":"https://www.roomie.jp/feature/house-report/","note":""},{"name":"FEATURE | ROOMIE（ルーミー）","url":"https://www.roomie.jp/feature/","note":""},{"name":"SPECIAL | ROOMIE（ルーミー）","url":"https://www.roomie.jp/special/","note":""}]},{"id":"s3","icon":"🌿","name":"ライフスタイル","sites":[{"name":"Tarzan Web","note":"身体の不調やダイエットの悩みに答え、健康グッズ等の高単価案件へ繋げる。","url":"https://tarzanweb.jp/"},{"name":"日経xwoman（総合トップ）","note":"「マネー」「キャリア」カテゴリ等から、働く女性の「投資の失敗」「転職の迷い」「両立の限界」など赤裸々な本音を抽出。","url":"https://woman.nikkei.com/"},{"name":"Yahoo!知恵袋（生き方と恋愛、人間関係の悩み）","note":"漠然とした将来の不安や、メンタルヘルスに関する深いPainを抽出。","url":"https://chiebukuro.yahoo.co.jp/category/2079526977/question/list"},{"name":"発言小町（キャリア・職場）","note":"職場の人間関係や「このまま今の会社にいていいのか」という悩みが豊富。","url":"https://komachi.yomiuri.co.jp/topics/genre/work/ranking/"},{"name":"発言小町（生活・身近な話題）","note":"「夫が家事をしない」「食費が減らない」など、生活者の生々しい愚痴が集まる。","url":"https://komachi.yomiuri.co.jp/topics/genre/life/ranking/"},{"name":"Amazon（日用品・家電 ★1〜★2レビュー）","note":"既存の便利グッズに対する「惜しい点・不満」を抽出し、解決策フックに使う。","url":"https://www.amazon.co.jp/"},{"name":"特集一覧 | Tarzan Web（ターザンウェブ）","url":"https://tarzanweb.jp/features","note":""},{"name":"記事一覧 | Tarzan Web（ターザンウェブ）","url":"https://tarzanweb.jp/articles","note":""},{"name":"鍛える | Tarzan Web（ターザンウェブ）","url":"https://tarzanweb.jp/category/training","note":""},{"name":"食べる | Tarzan Web（ターザンウェブ）","url":"https://tarzanweb.jp/category/eat","note":""},{"name":"キャリア | 日経ウーマン","url":"https://woman.nikkei.com/career/?i_cid=nbpnxw_navi_com_career","note":""},{"name":"学び | 日経ウーマン","url":"https://woman.nikkei.com/life/learning/?i_cid=nbpnxw_navi_com_learning","note":""},{"name":"マネジメント | 日経ウーマン","url":"https://woman.nikkei.com/management/?i_cid=nbpnxw_navi_com_management","note":""},{"name":"ダイバーシティ | 日経ウーマン","url":"https://woman.nikkei.com/diversity/?i_cid=nbpnxw_navi_com_dei","note":""},{"name":"子育て・教育｜日経ウーマン","url":"https://woman.nikkei.com/kids/?i_cid=nbpnxw_navi_com_edu","note":""},{"name":"健康・美容｜日経ウーマン","url":"https://woman.nikkei.com/life/health/?i_cid=nbpnxw_navi_com_health","note":""}]},{"id":"s4","icon":"💹","name":"ビジネス・経済","sites":[{"name":"ザイ・オンライン","note":"NISA、クレカなどの明確なランキングがあり、金融アフィリエイトの「答え」が揃う。","url":"https://diamond.jp/zai"},{"name":"マネーポストWEB","note":"「老後破産」「投資失敗」などのルポルタージュで読者の恐怖（Pain）を煽る。","url":"https://www.moneypost.jp/"},{"name":"みんかぶ 掲示板","note":"新NISAや投資信託など、金融ジャンルで初心者が何に怯えているか、損をした時の悲鳴を抽出。","url":"https://minkabu.jp/"},{"name":"Yahoo!知恵袋（ビジネスと経済、お金）","note":"「貯金ゼロの50代」「新NISAで損した」など、お金に関する切迫したSOSが集まる。","url":"https://chiebukuro.yahoo.co.jp/category/2078297790/question/list"},{"name":"発言小町（夫婦関係・離婚）","note":"見栄を張った失敗談や、教育費貧乏など、リアルな家計の悲鳴が拾える。","url":"https://komachi.yomiuri.co.jp/topics/genre/couple/"},{"name":"X（旧Twitter）高度な検索","note":"「(貯金 OR 投資) (溶かした OR 失敗)」等で検索し、リアルタイムの悲痛な声を抽出。","url":"https://twitter.com/search-advanced"}]},{"id":"s5","icon":"💻","name":"IT・ガジェット","sites":[{"name":"360LiFE（家電・ガジェット）","note":"『MONOQLO』『家電批評』公式。ルーター等のベストバイがわかり、そのまま台本になる。","url":"https://360life.shinyusha.co.jp/"},{"name":"mybest（家電・PC）","note":"デメリット込みの徹底レビューで、信頼性の高い比較構成が作れる。","url":"https://my-best.com/"},{"name":"Yahoo!知恵袋（スマートデバイス・PC・家電）","note":"「Wi-Fiが繋がらない」「設定がわからない」等、初心者がつまずく悩みの宝庫。","url":"https://chiebukuro.yahoo.co.jp/category/2080401469/question/list"},{"name":"価格.com クチコミ掲示板","note":"マニアによる「買った後の後悔（デメリット）」が詳細に集まる。上位互換提案の軸に。","url":"https://bbs.kakaku.com/"},{"name":"Amazon カスタマーQ&A（売れ筋ランキング）","note":"商品ページ中段のQ&Aから、購入直前の「最後の壁（懸念点）」を言語化してカンペにする。","url":"https://www.amazon.co.jp/gp/bestsellers"}]},{"id":"s6","icon":"👨‍👩‍👧","name":"ファミリー・キッズ・ペット","sites":[{"name":"発言小町 トップ＆ランキング","note":"日本一ドロドロした長文の人間ドラマ。共感と怒りを煽る「ストーリー型台本」の最強カンペ。","url":"https://komachi.yomiuri.co.jp/ranking/"},{"name":"ママリ Q&A","note":"「夫への不満」「育児ノイローゼ」など感情的で生々しいPainの宝庫。時短家電の訴求等に。","url":"https://mamari.jp/qa"},{"name":"Yahoo!知恵袋（子育てと学校）","note":"「夜鳴き」「離乳食を食べない」など、切羽詰まった焦りや絶望がリアルタイムで拾える。","url":"https://chiebukuro.yahoo.co.jp/category/2078297878/question/list"},{"name":"Yahoo!知恵袋（ペット）","note":"ペットの病気・しつけ・飼い方に関するリアルな悩みが集まる。","url":"https://chiebukuro.yahoo.co.jp/category/2078297852/question/list"},{"name":"いぬのきもち WEB","note":"獣医師監修の解決策。知恵袋の悩みに対する「信頼できるエビデンス」として活用。","url":"https://dog.benesse.ne.jp/"},{"name":"ねこのきもち WEB","note":"獣医師監修の解決策。知恵袋の悩みに対する「信頼できるエビデンス」として活用。","url":"https://cat.benesse.ne.jp/"},{"name":"妊娠[ママリ]","url":"https://mamari.jp/pregnancy","note":""},{"name":"出産[ママリ]","url":"https://mamari.jp/birth","note":""},{"name":"子育て・家族[ママリ]","url":"https://mamari.jp/family","note":""},{"name":"マネー[ママリ]","url":"https://mamari.jp/money","note":""},{"name":"ママリ口コミ大賞2026 | ママリ","url":"https://award.mamari.jp","note":""},{"name":"トレンド・イベント[ママリ]","url":"https://mamari.jp/entertainment","note":""},{"name":"エンターテイメント[ママリ]","url":"https://mamari.jp/entertainment/590","note":""},{"name":"ブログ・SNS[ママリ]","url":"https://mamari.jp/entertainment/620","note":""},{"name":"コラム[ママリ]","url":"https://mamari.jp/entertainment/621","note":""}]}];
 /*SOURCES_END*/
 
 // ═══════════════════════════════════════════════════════════════
@@ -859,7 +743,39 @@ function renderContent() {
 function toggleSection(btn) {
   btn.classList.toggle('open');
   const body = btn.nextElementSibling;
-  if (body) body.classList.toggle('open');
+  if (!body) return;
+  const isOpen = btn.classList.contains('open');
+  if (isOpen) {
+    body.classList.add('open');
+    body.style.height = body.scrollHeight + 'px';
+    body.addEventListener('transitionend', function h() {
+      body.style.height = 'auto';
+      body.removeEventListener('transitionend', h);
+    });
+  } else {
+    body.classList.remove('open');
+    body.style.height = body.scrollHeight + 'px';
+    body.offsetHeight; // force reflow
+    requestAnimationFrame(() => { body.style.height = '0'; });
+  }
+}
+
+function toggleDmCat(el) {
+  const cat = el.parentElement;
+  const body = cat.querySelector('.dm-body');
+  if (!body) { cat.classList.toggle('open'); return; }
+  const isOpen = cat.classList.toggle('open');
+  if (isOpen) {
+    body.style.height = body.scrollHeight + 'px';
+    body.addEventListener('transitionend', function h() {
+      body.style.height = 'auto';
+      body.removeEventListener('transitionend', h);
+    });
+  } else {
+    body.style.height = body.scrollHeight + 'px';
+    body.offsetHeight;
+    requestAnimationFrame(() => { body.style.height = '0'; });
+  }
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -1156,32 +1072,34 @@ function toggleDmagazine() {
 function renderDmagazine() {
   const content = document.getElementById('content');
   if (!content) return;
+  const totalMags = SAVED_DMAG.reduce((s,c) => s + (c.mags||[]).length, 0);
   let html = `
     <div style="background:linear-gradient(135deg,#e91e63,#c2185b);color:#fff;border-radius:10px;padding:14px 18px;margin-bottom:14px;display:flex;align-items:center;gap:12px">
       <span style="font-size:26px">📚</span>
       <div>
         <div style="font-size:15px;font-weight:700">dマガジン掲載誌</div>
-        <div style="font-size:10.5px;opacity:.82;font-family:var(--font-mono);margin-top:2px">${SAVED_DMAG.reduce((s,c)=>s+(c.mags||[]).length,0)} 誌 · ${SAVED_DMAG.length} カテゴリ</div>
+        <div style="font-size:10.5px;opacity:.82;font-family:var(--font-mono);margin-top:2px">${totalMags} 誌 · ${SAVED_DMAG.length} カテゴリ</div>
       </div>
     </div>
     <div class="dm-cats">`;
   SAVED_DMAG.forEach(cat => {
     html += `<div class="dm-cat">
-      <div class="dm-cat-hd" onclick="this.parentElement.classList.toggle('open')">
-        <span class="dm-cat-icon">${cat.icon}</span>
+      <div class="dm-cat-hd" onclick="toggleDmCat(this)">
+        <span class="dm-cat-icon">${cat.icon||'📰'}</span>
         <span class="dm-cat-name">${cat.name}</span>
         <span class="dm-cat-count">${(cat.mags||[]).length}</span>
         <span class="dm-chevron">▾</span>
       </div>
       <div class="dm-body">
-        <div class="dm-grid">`;
+        <div class="dm-body-inner">
+          <div class="dm-grid">`;
     (cat.mags||[]).forEach(mag => {
-      const isLinked = !!mag.url;
-      html += `<a href="${mag.url||'#'}" target="_blank" class="dm-mag-btn${isLinked?' linked':''}">
-        <span class="dm-mag-dot"></span>${mag.name}
-      </a>`;
+      const linked = mag.url && mag.url !== '#';
+      html += linked
+        ? `<a href="${mag.url}" target="_blank" class="dm-mag-btn linked"><span class="dm-mag-dot"></span>${mag.name}</a>`
+        : `<button class="dm-mag-btn"><span class="dm-mag-dot"></span>${mag.name}</button>`;
     });
-    html += `</div></div></div>`;
+    html += `</div></div></div></div>`;
   });
   html += '</div>';
   content.innerHTML = html;
@@ -1202,7 +1120,7 @@ function toggleSources() {
     const tt = document.getElementById('topbarTitle');
     const tm = document.getElementById('topbarMeta');
     if (tt) tt.textContent = '📡 情報源';
-    if (tm) tm.textContent = `${SAVED_SOURCES.reduce((s,c)=>s+(c.items||[]).length,0)} サイト · ${SAVED_SOURCES.length} カテゴリ`;
+    if (tm) tm.textContent = `${SAVED_SOURCES.reduce((s,c)=>s+(c.sites||c.items||[]).length,0)} サイト · ${SAVED_SOURCES.length} カテゴリ`;
     document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
     renderSources();
   } else {
@@ -1217,31 +1135,38 @@ function toggleSources() {
 function renderSources() {
   const content = document.getElementById('content');
   if (!content) return;
+  const totalSites = SAVED_SOURCES.reduce((s,c) => s + (c.sites||c.items||[]).length, 0);
   let html = `
     <div style="background:linear-gradient(135deg,#0891b2,#0e7490);color:#fff;border-radius:10px;padding:14px 18px;margin-bottom:14px;display:flex;align-items:center;gap:12px">
       <span style="font-size:26px">📡</span>
       <div>
         <div style="font-size:15px;font-weight:700">情報源・口コミ抽出サイト</div>
-        <div style="font-size:10.5px;opacity:.82;font-family:var(--font-mono);margin-top:2px">${SAVED_SOURCES.reduce((s,c)=>s+(c.items||[]).length,0)} サイト · ${SAVED_SOURCES.length} カテゴリ</div>
+        <div style="font-size:10.5px;opacity:.82;font-family:var(--font-mono);margin-top:2px">${totalSites} サイト · ${SAVED_SOURCES.length} カテゴリ</div>
       </div>
-    </div>`;
+    </div>
+    <div class="dm-cats">`;
   SAVED_SOURCES.forEach(cat => {
-    html += `<div class="dm-cat" style="margin-bottom:8px">
-      <div class="dm-cat-hd" onclick="this.parentElement.classList.toggle('open')">
-        <span class="dm-cat-icon">${cat.icon}</span>
+    const items = cat.sites || cat.items || [];
+    html += `<div class="dm-cat">
+      <div class="dm-cat-hd" onclick="toggleDmCat(this)">
+        <span class="dm-cat-icon">${cat.icon||'🌐'}</span>
         <span class="dm-cat-name">${cat.name}</span>
-        <span class="dm-cat-count">${(cat.items||[]).length}</span>
+        <span class="dm-cat-count">${items.length}</span>
         <span class="dm-chevron">▾</span>
       </div>
       <div class="dm-body">
-        <div class="dm-grid">`;
-    (cat.items||[]).forEach(item => {
-      html += `<a href="${item.url||'#'}" target="_blank" class="dm-mag-btn linked">
-        <span class="dm-mag-dot"></span>${item.name}
-      </a>`;
+        <div class="dm-body-inner">
+          <div class="dm-grid-col">`;
+    items.forEach(item => {
+      const linked = item.url && item.url !== '#';
+      const noteHtml = item.note ? `<span class="dm-site-note"> — ${item.note}</span>` : '';
+      html += linked
+        ? `<a href="${item.url}" target="_blank" class="dm-mag-btn linked"><span class="dm-mag-dot"></span>${item.name}${noteHtml}</a>`
+        : `<button class="dm-mag-btn"><span class="dm-mag-dot"></span>${item.name}${noteHtml}</button>`;
     });
-    html += `</div></div></div>`;
+    html += `</div></div></div></div>`;
   });
+  html += '</div>';
   content.innerHTML = html;
 }
 
@@ -1427,6 +1352,45 @@ const ADVISOR_IDEAS = [
 
 let advisorHistory = [];
 let advisorGoal = '';
+
+// ─── API Key helpers ──────────────────────────────────────────
+function getAdvisorApiKey() {
+  try { return localStorage.getItem('gemhub_gemini_key') || ''; } catch(e) { return ''; }
+}
+function saveAdvisorApiKey(key) {
+  try { localStorage.setItem('gemhub_gemini_key', key); } catch(e) {}
+}
+function showAdvisorKeyPrompt(msg) {
+  const body = document.getElementById('advisorBody');
+  if (!body) return;
+  const current = getAdvisorApiKey();
+  body.innerHTML = `
+    <div style="padding:4px 0">
+      ${msg ? `<div class="advisor-error" style="margin-bottom:12px">⚠️ ${msg}</div>` : ''}
+      <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:6px">🔑 Gemini APIキー</div>
+      <div style="font-size:10.5px;color:var(--text3);line-height:1.6;margin-bottom:10px">
+        <a href="https://aistudio.google.com/apikey" target="_blank" style="color:var(--accent)">aistudio.google.com/apikey</a> でキーを取得し、ここに入力してください。<br>
+        キーはブラウザのlocalStorageにのみ保存されます。
+      </div>
+      <input id="apiKeyInput" type="password" placeholder="AIza..." value="${current}"
+        style="width:100%;border:1.5px solid var(--border-mid);border-radius:8px;padding:8px 11px;font-size:12.5px;font-family:var(--font-mono);color:var(--text);outline:none;background:var(--bg);margin-bottom:8px"
+        onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border-mid)'">
+      <div style="display:flex;gap:6px">
+        <button onclick="
+          const v=document.getElementById('apiKeyInput').value.trim();
+          if(!v){alert('APIキーを入力してください');return;}
+          saveAdvisorApiKey(v);
+          showToast('✅ APIキーを保存しました');
+          buildAdvisorWelcomeToBody();
+        " style="flex:1;padding:8px;border-radius:8px;border:none;background:var(--accent);color:#fff;font-family:var(--font);font-size:12px;font-weight:700;cursor:pointer">保存する</button>
+        ${current ? `<button onclick="buildAdvisorWelcomeToBody()" style="padding:8px 14px;border-radius:8px;border:1.5px solid var(--border-mid);background:var(--bg);color:var(--text2);font-family:var(--font);font-size:12px;cursor:pointer">キャンセル</button>` : ''}
+      </div>
+    </div>`;
+}
+function buildAdvisorWelcomeToBody() {
+  const body = document.getElementById('advisorBody');
+  if (body) body.innerHTML = buildAdvisorWelcome();
+}
 let currentIdeaIndex = 0;
 
 function toggleAdvisor() {
@@ -1505,16 +1469,22 @@ async function advisorSubmit() {
   const ta = document.getElementById('advisorInput');
   const input = ta ? ta.value.trim() : '';
   if (!input) return;
-  if (ta) ta.value = '';
 
+  // API Key check
+  const apiKey = getAdvisorApiKey();
+  if (!apiKey) {
+    showAdvisorKeyPrompt('APIキーを入力してから送信してください。');
+    return;
+  }
+
+  if (ta) ta.value = '';
   const body = document.getElementById('advisorBody');
   if (!body) return;
 
   if (!advisorGoal) advisorGoal = input;
+  advisorHistory.push({ role: 'user', parts: [{ text: input }] });
 
-  advisorHistory.push({ role: 'user', content: input });
-
-  // Show goal + loading
+  // Show loading
   body.innerHTML = `
     <div class="advisor-goal-badge">${advisorGoal}</div>
     ${advisorHistory.length > 1 ? `<button class="advisor-new-btn" onclick="advisorNewSession()">＋ 新しい相談</button>` : ''}
@@ -1525,26 +1495,29 @@ async function advisorSubmit() {
     `- ${g.name}${g.url?' [URL有]':''}${g.note?' ('+g.note+')':''}`
   )).join('\n');
 
-  const systemPrompt = `あなたはGemHubのコンシェルジュです。ユーザーの「〜したい」という目標に対して、登録済みGemの使用順序と理由を提案してください。
+  const systemInstruction = `あなたはGemHubのコンシェルジュです。ユーザーの「〜したい」という目標に対して、登録済みGemの使用順序と理由を提案してください。
 返答は日本語で、マークダウン形式（**太字**・番号付きリスト）を使い、200〜400字程度に収めてください。
 
 登録済みGem一覧：
 ${gemList}`;
 
   try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${encodeURIComponent(apiKey)}`;
+    const response = await fetch(endpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        system: systemPrompt,
-        messages: advisorHistory
+        system_instruction: { parts: [{ text: systemInstruction }] },
+        contents: advisorHistory
       })
     });
+    if (!response.ok) {
+      const err = await response.json().catch(() => ({}));
+      throw new Error(`${response.status}: ${err.error?.message || response.statusText}`);
+    }
     const data = await response.json();
-    const text = data.content?.[0]?.text || '回答を取得できませんでした。';
-    advisorHistory.push({ role: 'assistant', content: text });
+    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '回答を取得できませんでした。';
+    advisorHistory.push({ role: 'model', parts: [{ text }] });
 
     // Render response with simple markdown
     const rendered = text
@@ -1558,7 +1531,7 @@ ${gemList}`;
   } catch(e) {
     body.innerHTML = `
       <div class="advisor-goal-badge">${advisorGoal}</div>
-      <div class="advisor-error">❌ API呼び出しエラー: ${e.message}</div>
+      <div class="advisor-error">❌ API呼び出しエラー: ${e.message}<br><small style="opacity:.75">APIキーを確認するか、🔑ボタンで再設定してください。</small></div>
       <button class="advisor-new-btn" onclick="advisorNewSession()">＋ 新しい相談</button>`;
   }
 }
@@ -1587,7 +1560,7 @@ function toggleMemo() {
     const tt = document.getElementById('topbarTitle');
     const tm = document.getElementById('topbarMeta');
     if (tt) tt.textContent = '📝 メモ';
-    if (tm) tm.textContent = 'note.ms（クイックメモ） / aNotepad（ログイン・デバイス間同期）';
+    if (tm) tm.textContent = 'ローカルメモ（自動保存） / aNotepad（ログイン・デバイス間同期）';
     document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
     renderMemo();
   } else {
@@ -1612,35 +1585,46 @@ function renderMemo() {
         <div>
           <div style="font-size:15px;font-weight:700;line-height:1.2">メモ帳</div>
           <div style="font-size:10.5px;opacity:.82;font-family:var(--font-mono);margin-top:2px">
-            note.ms（クイックメモ・ログイン不要） / aNotepad（ログイン・デバイス間同期対応）
+            ローカルメモ（自動保存） / aNotepad（ログイン・デバイス間同期対応）
           </div>
         </div>
       </div>
       <div id="memoGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+
+        <!-- ★ 左パネル: ローカルメモ（localStorage自動保存） -->
         <div>
           <div style="display:flex;align-items:center;gap:7px;margin-bottom:8px;flex-wrap:wrap">
-            <span style="font-size:14px">⚡</span>
-            <span style="font-size:13px;font-weight:600;color:var(--text)">note.ms</span>
-            <span style="font-size:10px;font-family:var(--font-mono);color:var(--text3);background:rgba(0,0,0,.06);border-radius:8px;padding:1px 7px">URLのみ・ログイン不要</span>
-            <a href="https://note.ms/neverendingdaily" target="_blank"
-               style="font-size:10px;color:var(--accent);text-decoration:none;margin-left:auto;white-space:nowrap">別タブで開く ↗</a>
+            <span style="font-size:14px">💾</span>
+            <span style="font-size:13px;font-weight:600;color:var(--text)">ローカルメモ</span>
+            <span style="font-size:10px;font-family:var(--font-mono);color:var(--text3);background:rgba(0,0,0,.06);border-radius:8px;padding:1px 7px">自動保存・ログイン不要</span>
+            <span id="memoSaveStatus" style="font-size:10px;font-family:var(--font-mono);color:var(--green);margin-left:auto;opacity:0;transition:opacity .4s">✓ 保存済み</span>
           </div>
           <div style="border-radius:10px;overflow:hidden;border:1px solid var(--border-mid);background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.08)">
-　　　　　　　<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; min-height: 300px; background-color: #f8f9fa; border: 1px solid #ddd; border-radius: 8px; padding: 20px; text-align: center; box-sizing: border-box;">
-　　　　　　　    <h3 style="margin-top: 0; color: #333; font-size: 1.2em;">note.ms クイックメモ</h3>
-　　　　　　　    <p style="color: #666; font-size: 14px; margin-bottom: 20px;">
-　　　　　　　        セキュリティ仕様により、この枠内には直接表示できません。<br>
-　　　　　　　        下のボタンから別タブで開いてご利用ください。
-　　　　　　　    </p>
-　　　　　　　    <a href="https://note.ms/neverendingdaily" target="_blank" rel="noopener noreferrer" style="display: inline-block; padding: 12px 24px; background-color: #007bff; color: #fff; text-decoration: none; border-radius: 6px; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-　　　　　　　        別タブで note.ms を開く
-　　　　　　　    </a>
-</div>          </div>
-          <div style="font-size:10px;color:var(--text3);margin-top:7px;padding:6px 9px;line-height:1.65;background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.2);border-radius:6px">
-            ⚠️ <strong style="color:#92400e">URLを知っていれば誰でも閲覧・編集・削除が可能</strong>です。<br>
-            パスワード・個人情報・機密情報は絶対に記入しないでください。
+            <div style="display:flex;align-items:center;gap:6px;padding:8px 11px;border-bottom:1px solid var(--border);background:var(--bg-panel)">
+              <input id="memoTitle" type="text" placeholder="タイトル（任意）"
+                value="${(localStorage.getItem('gemhub_memo_title')||'').replace(/"/g,'&quot;')}"
+                style="flex:1;border:none;background:transparent;font-size:12.5px;font-family:var(--font);color:var(--text);outline:none;font-weight:600"
+                oninput="memoAutoSave()">
+              <button onclick="memoDownload()" title="テキストファイルとしてダウンロード"
+                style="background:none;border:1.5px solid var(--border-mid);border-radius:6px;cursor:pointer;font-size:11px;padding:3px 8px;color:var(--text3);transition:all .14s"
+                onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'"
+                onmouseout="this.style.borderColor='var(--border-mid)';this.style.color='var(--text3)'">⬇ DL</button>
+              <button onclick="memoClear()" title="メモを消去"
+                style="background:none;border:1.5px solid var(--border-mid);border-radius:6px;cursor:pointer;font-size:11px;padding:3px 8px;color:var(--text3);transition:all .14s"
+                onmouseover="this.style.borderColor='var(--danger)';this.style.color='var(--danger)'"
+                onmouseout="this.style.borderColor='var(--border-mid)';this.style.color='var(--text3)'">🗑</button>
+            </div>
+            <textarea id="memoBody" placeholder="ここにメモを入力してください。自動的に保存されます。"
+              style="width:100%;height:510px;border:none;resize:none;padding:12px 14px;font-size:13px;font-family:var(--font);color:var(--text);line-height:1.7;background:#fff;outline:none;display:block"
+              oninput="memoAutoSave()">${(localStorage.getItem('gemhub_memo_body')||'').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</textarea>
+          </div>
+          <div style="font-size:10px;color:var(--text3);margin-top:7px;padding:6px 9px;line-height:1.65;background:rgba(52,168,83,.07);border:1px solid rgba(52,168,83,.2);border-radius:6px">
+            ✅ メモはブラウザの <strong>localStorage</strong> に自動保存されます。<br>
+            同じブラウザ・同じHTMLファイルを開けば次回も内容が残ります。
           </div>
         </div>
+
+        <!-- 右パネル: aNotepad -->
         <div>
           <div style="display:flex;align-items:center;gap:7px;margin-bottom:8px;flex-wrap:wrap">
             <span style="font-size:14px">🔐</span>
@@ -1661,6 +1645,44 @@ function renderMemo() {
       </div>
       <style>@media(max-width:768px){#memoGrid{grid-template-columns:1fr !important}}</style>
     </div>`;
+
+  // ローカルメモ自動保存
+  window.memoAutoSave = (function() {
+    let tid = null;
+    return function() {
+      const status = document.getElementById('memoSaveStatus');
+      if (status) { status.style.opacity = '0'; }
+      clearTimeout(tid);
+      tid = setTimeout(() => {
+        const title = document.getElementById('memoTitle');
+        const body  = document.getElementById('memoBody');
+        try {
+          if (title) localStorage.setItem('gemhub_memo_title', title.value);
+          if (body)  localStorage.setItem('gemhub_memo_body',  body.value);
+        } catch(e) {}
+        if (status) { status.style.opacity = '1'; setTimeout(() => { status.style.opacity='0'; }, 1800); }
+      }, 600);
+    };
+  })();
+
+  window.memoDownload = function() {
+    const title = (document.getElementById('memoTitle')?.value || 'memo').replace(/[^\w\-_. ]/g,'_') || 'memo';
+    const body  = document.getElementById('memoBody')?.value || '';
+    const blob  = new Blob([body], { type: 'text/plain;charset=utf-8' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = title + '.txt';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  };
+
+  window.memoClear = function() {
+    if (!confirm('メモの内容をすべて消去しますか？')) return;
+    const body = document.getElementById('memoBody');
+    if (body) { body.value = ''; }
+    try { localStorage.removeItem('gemhub_memo_body'); } catch(e) {}
+    showToast('🗑️ メモを消去しました');
+  };
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -1728,8 +1750,12 @@ function init() {
           <span class="advisor-hd-icon">🤖</span>
           <div class="advisor-hd-text">
             <div class="advisor-hd-title">AIコンシェルジュ</div>
-            <div class="advisor-hd-sub">Powered by Claude Sonnet</div>
+            <div class="advisor-hd-sub">Powered by Gemini 2.0 Flash</div>
           </div>
+          <button onclick="showAdvisorKeyPrompt('')" title="APIキーを設定"
+            style="background:none;border:1.5px solid var(--border-mid);border-radius:6px;cursor:pointer;font-size:13px;padding:3px 7px;color:var(--text3);margin-right:4px;transition:all .14s;line-height:1"
+            onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'"
+            onmouseout="this.style.borderColor='var(--border-mid)';this.style.color='var(--text3)'">🔑</button>
           <button class="advisor-close" onclick="closeAdvisor()">✕</button>
         </div>
         <div class="advisor-body" id="advisorBody"></div>
@@ -1748,7 +1774,11 @@ function init() {
 
   const advisorBody = document.getElementById('advisorBody');
   if (advisorBody && !advisorBody.innerHTML.trim()) {
-    advisorBody.innerHTML = buildAdvisorWelcome();
+    if (getAdvisorApiKey()) {
+      advisorBody.innerHTML = buildAdvisorWelcome();
+    } else {
+      showAdvisorKeyPrompt('');
+    }
   }
 
   renderSidebar();
